@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <title>dmv</title>
+  <meta name="description" content="Read dlt files">
+  <meta name="author" content="r2b1d1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03a9f4"/>
+
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/minty/bootstrap.min.css"
+    integrity="sha384-HqaYdAE26lgFCJsUF9TBdbZf7ygr9yPHtxtg37JshqVQi6CCAo6Qvwmgc5xclIiV"
+    crossorigin="anonymous">
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined">
+
+  <link rel="stylesheet" href="styles/dmv.css">
+
+  <link rel="icon" type="image/svg+xml" href="images/bug.svg">
+
+</head>
+
+<body>
+  <div class="container-fluid d-flex h-100 p-0">
+
+    <div class="landing m-auto d-flex flex-row align-items-center justify-content-center w-75">
+      <div class="row">
+        <div class="col-md-5 col-lg-5 order-md-2 d-flex flex-column justify-content-center align-items-center">
+          <span class="dmv-logo material-icons-outlined">bug_report</span>
+        </div>
+        <div class="col-md-7 col-lg-7 order-md-1 d-flex flex-column justify-content-center">
+          <h3 class="text-justify">
+            Because sometimes all you need is to read a few lines of log.
+          </h3>
+          <hr class="my-4">
+          <p class="lead text-justify">
+            <span class="font-weight-bold">dmv</span> parses
+            <a href="https://at.projects.genivi.org/wiki/display/PROJ/Diagnostic+Log+and+Trace">
+              GENIVI
+            </a>
+            's dlt files exported from
+            <a href="https://at.projects.genivi.org/wiki/display/PROJ/DLT+Viewer+GUI">
+              DLT Viewer
+            </a>
+            or saved as offline logs.
+            <br>
+              It also parses dlt files converted to json using
+            <a href="https://github.com/r2b1d1/dlt2json">dlt2json</a> tool.
+          <hr class="my-2">
+          <p class="lead text-justify">
+            Data is rendred to a table with filtering, sorting and searching
+            options.
+          </p>
+          <hr class="my-2">
+          <p class="lead text-justify">
+            So go ahead and give it a try,
+            <a class="open-file" href="#">load a file</a>.
+            or you can use the action button for more options.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="help d-none flex-column justify-content-center">
+      <div class="d-flex flex-row mx-2 my-3">
+        <span class="help-icon mx-2 my-auto">+</span>
+        <p class="lead mx-2 my-auto">Opens the menu.</p>
+      </div>
+      <div class="d-flex flex-row mx-2 my-3">
+        <span class="material-icons-outlined help-icon mx-2 my-auto">home</span>
+        <p class="lead mx-2 my-auto">Go back to home view.</p>
+      </div>
+      <div class="d-flex flex-row mx-2 my-3">
+        <span class="material-icons-outlined help-icon mx-2 my-auto">
+          table_chart
+        </span>
+        <p class="lead mx-2 my-auto">Go back to table view if it exists.</p>
+      </div>
+      <div class="d-flex flex-row mx-2 my-3">
+        <span class="material-icons-outlined help-icon mx-2 my-auto">
+          folder
+        </span>
+        <p class="lead mx-2 my-auto">
+          Open a new dlt file.
+          <br>
+          For large files (> 30 MB) convert the file to json before loading it.
+        </p>
+      </div>
+      <div class="d-flex flex-row mx-2 my-3">
+        <span class="material-icons help-icon mx-2 my-auto">search</span>
+        <p class="lead mx-2 my-auto text-justify">
+          When in table view, this opens the search box.<br>Start typing to
+          search the payload.<br>You can also filter on <i>ecu, app, ctx, type
+          or info</i>,before searching the payload.<br>Search with
+          <i>/filter=value&filter=value/ search</i><br>e.g:
+          <i>/app=log&ctx=tes1/ hello</i>
+        </p>
+      </div>
+      <div class="d-flex flex-row mx-2 my-3">
+        <span class="material-icons help-icon mx-2 my-auto">help_outline</span>
+        <p class="lead mx-2 my-auto">Go to this view.</p>
+      </div>
+    </div>
+
+    <div class="menu">
+      <div class="actions blink" data-offset="10">
+        <span class="material-icons add-button">add</span>
+        <span class="material-icons x-button d-none">clear</span>
+      </div>
+
+      <div class="action" data-trigger="help">
+        <span class="material-icons tool">help_outline</span>
+      </div>
+
+      <div class="action" data-trigger="search">
+        <span class="material-icons tool">search</span>
+      </div>
+
+      <div class="action" data-trigger="open">
+        <span class="material-icons-outlined tool">folder</span>
+      </div>
+
+      <div class="action" data-trigger="table">
+        <span class="material-icons-outlined tool">table_chart</span>
+      </div>
+
+      <div class="action" data-trigger="home">
+        <span class="material-icons-outlined tool">home</span>
+      </div>
+
+
+    </div>
+
+    <input type="file" class="file-selector d-none">
+
+    <div class="progress-spinner m-auto d-none">
+      <img src="images/infinity.gif" alt="infinity spinner">
+    </div>
+
+    <div class="file table-responsive d-none">
+
+      <table class="table table-hover m-auto">
+        <thead class="table-head">
+          <tr>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              #
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              time
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              ecu
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              app
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              ctx
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              type
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              info
+            </th>
+            <th
+              scope="col"
+              class="sticky-top table-head text-center align-middle">
+              payload
+            </th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+
+    </div>
+
+    <div class="search-box blink flex-column p-2 d-none">
+      <div class="d-flex flex-row justify-content-between">
+        <div></div>
+        <span class="search-box-close material-icons">clear</span>
+      </div>
+      <hr class="w-100 my-2">
+      <div class="d-flex flex-row justify-content-between">
+        <div class="search-bar d-flex flex-row flex-nowrap m-2 p-2">
+          <span class="material-icons">search</span>
+          <input
+            class="search-text h6 mx-2 my-auto"
+            type="input"
+            placeholder="Search payload ...">
+          <span class="clear-button material-icons d-none">clear</span>
+        </div>
+        <div class="spinner mx-2 my-auto">
+          <p class="my-auto"></p>
+          <img class="d-none" src="images/eclipse.gif" alt="eclipse spinner">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM="
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.2/umd/popper.min.js"
+    integrity="sha256-XahKYIZhnEztrOcCTmaEErjYDLoLqBoDJbVMYybyjH8="
+    crossorigin="anonymous"></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+
+  <script type="module" src="scripts/dlt.js"></script>
+  <script src="scripts/dmv.js"></script>
+
+</body>
+</html>
